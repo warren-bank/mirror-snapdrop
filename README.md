@@ -1,20 +1,6 @@
 # Snapdrop 
 
-[Snapdrop](https://snapdrop.net): local file sharing in your browser. Inspired by Apple's Airdrop.
-
-## Snapdrop is now LimeWire
-Dear Snapdrop community,
-Snapdrop has been acquired by LimeWire, a leading file sharing platform with integrated AI tools. You can continue to share any files between devices, while benefitting from:
-* sharing files between devices in the same network
-* anonymous up- & downloads
-* end-to-end encryption
-* up to 40GB storage for free users
-* integrated AI tools for signed-up users
-
-Visit [snapdrop.net](https://snapdrop.net) or [limewire.com](https://limewire.com)
-
-The Github repository will stay as-is and you can still go ahead and download and run the classic Snapdrop on your own infrastructure.
-
+[Snapdrop](https://github.com/SnapDrop/snapdrop): local file sharing in your browser. Inspired by Apple's Airdrop.
 
 ##  Classic Snapdrop is built with the following awesome technologies
 * Vanilla HTML5 / ES6 / CSS3 frontend
@@ -22,7 +8,38 @@ The Github repository will stay as-is and you can still go ahead and download an
 * [NodeJS](https://nodejs.org/en/) backend
 * [Progressive Web App](https://wikipedia.org/wiki/Progressive_Web_App)
 
+## Self-hosting on LAN
 
-Have any questions? Read our [FAQ](/docs/faq.md).
+* websocket server
+  1. install dependencies:
+     ```bash
+       cd ./server
+       npm install
+     ```
+  2. start server on port `3000`:
+     ```bash
+       node ./server/index.js
+     ```
 
-You can [host your own instance with Docker](/docs/local-dev.md).
+* http server
+  1. install your favorite web server (for static files)
+     - ex: [serve](https://github.com/warren-bank/node-serve)
+  2. start server on any available port to serve the [client](./client) directory
+     - ex: port `8080`
+       ```bash
+         serve --cors --listen 8080 ./client
+       ```
+
+* http client
+  1. open the URL for http server in any modern web browser
+     - ex: [http://192.168.0.2:8080/index.html?room=my-private-namespace](http://192.168.0.2:8080/index.html?room=my-private-namespace)
+     - where:
+       * the value of the `room` querystring parameter is used to group clients
+       * any value is allowed
+       * when multiple clients connect to the same `room`, then they:
+         - are visible to one-another
+         - can send files or messages to each other
+
+## License
+
+[GPL-3.0](./LICENSE.txt)

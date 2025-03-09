@@ -13,6 +13,7 @@ process.on('SIGTERM', () => {
 
 const parser = require('ua-parser-js');
 const { uniqueNamesGenerator, animals, colors } = require('unique-names-generator');
+const parse_url = require('url').parse;
 
 class SnapdropServer {
 
@@ -182,6 +183,12 @@ class Peer {
     }
 
     _setIP(request) {
+        const url = parse_url(request.url, true);
+        if (url && url.query && (typeof url.query === 'object') && url.query.room) {
+          this.ip = url.query.room;
+          return;
+        }
+
         if (request.headers['x-forwarded-for']) {
             this.ip = request.headers['x-forwarded-for'].split(/\s*,\s*/)[0];
         } else {
