@@ -5,6 +5,10 @@ window.isDownloadSupported = (typeof document.createElement('a').download !== 'u
 window.isProductionEnvironment = !window.location.host.startsWith('localhost');
 window.iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
+// https://web.archive.org/web/20230317051908/https://developer.chrome.com/docs/multidevice/user-agent/
+// Android 5.0 and higher:
+window.isAndroidWebView = (navigator.userAgent.indexOf('Chrome/') != -1) && (navigator.userAgent.indexOf('; Android') != -1) && (navigator.userAgent.indexOf('; wv)') != -1)
+
 // set display name
 Events.on('display-name', e => {
     const me = e.detail.message;
@@ -276,8 +280,9 @@ class ReceiveDialog extends Dialog {
         this.$el.querySelector('#fileSize').textContent = this._formatFileSize(file.size);
         this.show();
 
-        if (window.isDownloadSupported) return;
-        // fallback for iOS
+        if (window.isDownloadSupported && !window.isAndroidWebView) return;
+
+        // fallback for iOS and Android WebView
         $a.target = '_blank';
         const reader = new FileReader();
         reader.onload = e => $a.href = reader.result;
